@@ -738,7 +738,8 @@
     function readMetaLead() {
         const params = new URLSearchParams(window.location.search);
         if (![...params.keys()].length) return null;
-        const text = (key) => (params.get(key) || '').trim().slice(0, 100);
+        // Drop spaces and stray double quotes around a value (hand-typed links like name="A B").
+        const text = (key) => (params.get(key) || '').replace(/^[\s"“”]+|[\s"“”]+$/g, '').slice(0, 100);
         const digits = (key) => (params.get(key) || '').replace(/\D/g, '');
 
         const pinRaw = digits('pin');
