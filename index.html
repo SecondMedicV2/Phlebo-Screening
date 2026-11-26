@@ -738,26 +738,37 @@
     }
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ==================== META LEAD LINK ====================
-    // Personal links for Meta leads, e.g.
-    // ?src=meta&pin=413112&name=...&phone=9075438009&city=...&email=...&bike=yes&lead=1145794104597658
-    function readMetaLead() {
+    // ==================== AD LEAD LINK (META + GOOGLE) ====================
+    // Visitors from Meta or Google ads are tagged with their source. Personal links
+    // can also prefill the form, e.g.
+    //   ?src=meta&pin=413112&name=...&phone=9075438009&city=...&email=...&bike=yes&lead=1145794104597658
+    //   ?src=google&pin=413112&name=...&phone=9075438009&lead=...
+    // Plain ad clicks are recognised from utm_source, gclid/gbraid/wbraid (Google) or fbclid (Meta).
+    function readAdLead() {
         const params = new URLSearchParams(window.location.search);
         if (![...params.keys()].length) return null;
         const text = (key) => (params.get(key) || '').trim().slice(0, 100);
         const digits = (key) => (params.get(key) || '').replace(/\D/g, '');
+        const sourceOf = (value) => {
+            const v = value.toLowerCase();
+            if (['meta', 'facebook', 'fb', 'instagram', 'ig'].includes(v)) return 'Meta';
+            if (['google', 'gads', 'adwords', 'youtube'].includes(v)) return 'Google';
+            return '';
+        };
+
+        const lead = text('lead').replace(/[^\w-]/g, '').slice(0, 40);
+        const clickId = text('gclid') || text('gbraid') || text('wbraid');
+        const source = sourceOf(text('src')) || sourceOf(text('utm_source'))
+            || (clickId ? 'Google' : '')
+            || (params.has('fbclid') || lead ? 'Meta' : '');
+        if (!source) return null;
 
         const pinRaw = digits('pin');
         let phone = digits('phone');
         if (phone.length > 10 && (phone.startsWith('91') || phone.startsWith('0'))) phone = phone.slice(-10);
-        const lead = digits('lead').slice(0, 30);
-        const isMeta = text('src').toLowerCase() === 'meta' || lead !== '';
-        if (!isMeta) return null;
 
-        // Remove personal details from the address bar so they aren't re-shared.
-        try { history.replaceState(null, '', window.location.pathname + window.location.hash); } catch (e) {}
-
-        return {
+        const result = {
+            source: source,
             pin: pinRaw.length === 6 ? pinRaw : '',
             name: text('name'),
             phone: /^[6-9]\d{9}$/.test(phone) ? phone : '',
@@ -765,15 +776,27 @@
             email: text('email'),
             bike: text('bike').toLowerCase() === 'yes',
             lead: lead,
+            clickId: clickId.slice(0, 120),
+            campaign: text('utm_campaign'),
         };
-    }
-    const metaLead = readMetaLead();
 
-    function applyMetaPrefill() {
-        if (!metaLead) return;
-        if (metaLead.name) document.getElementById('fullName').value = metaLead.name;
-        if (metaLead.phone) document.getElementById('phone').value = metaLead.phone;
-        if (metaLead.bike) {
+        // Remove personal details from the address bar so they aren't re-shared
+        // (ad tracking parameters such as gclid/utm_* are kept).
+        const personal = ['pin', 'name', 'phone', 'city', 'email', 'bike', 'lead'];
+        if (personal.some(k => params.has(k))) {
+            personal.forEach(k => params.delete(k));
+            const rest = params.toString();
+            try { history.replaceState(null, '', window.location.pathname + (rest ? '?' + rest : '') + window.location.hash); } catch (e) {}
+        }
+        return result;
+    }
+    const adLead = readAdLead();
+
+    function applyAdPrefill() {
+        if (!adLead) return;
+        if (adLead.name) document.getElementById('fullName').value = adLead.name;
+        if (adLead.phone) document.getElementById('phone').value = adLead.phone;
+        if (adLead.bike) {
             const bikeBox = document.querySelector('.chip input[value="Bike/Scooter"]');
             if (bikeBox) {
                 bikeBox.checked = true;
@@ -849,7 +872,7 @@
             if (el.getAttribute('aria-invalid') === 'true') showFieldError(el, '');
         });
     });
-    applyMetaPrefill();
+    applyAdPrefill();
 
     function validateForm() {
         const f = {
@@ -900,10 +923,13 @@
             vacutainer_experience: a.vacutainerExp,
             qualification: a.qualification,
             equipment: a.equipment,
-            source: metaLead ? 'Meta' : 'Website',
-            meta_lead_id: metaLead ? metaLead.lead : '',
-            city: metaLead ? metaLead.city : '',
-            email: metaLead ? metaLead.email : ''
+            source: adLead ? adLead.source : 'Website',
+            meta_lead_id: adLead && adLead.source === 'Meta' ? adLead.lead : '',
+            google_lead_id: adLead && adLead.source === 'Google' ? adLead.lead : '',
+            google_click_id: adLead ? adLead.clickId : '',
+            utm_campaign: adLead ? adLead.campaign : '',
+            city: adLead ? adLead.city : '',
+            email: adLead ? adLead.email : ''
         };
         return fetch(GOOGLE_SHEET_WEBHOOK_URL, {
             method: 'POST',
@@ -966,7 +992,7 @@
     const resultDiv = document.getElementById('resultDisplay');
     const pincodesReady = loadPincodes();
     const checkedPincodes = new Set();
-    if (metaLead && metaLead.pin) inputEl.value = metaLead.pin;
+    if (adLead && adLead.pin) inputEl.value = adLead.pin;
 
     inputEl.addEventListener('input', (e) => {
         e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
@@ -1018,8 +1044,8 @@
         if (!match) {
             resultDiv.innerHTML = `<div class="alert alert-danger reveal">${icon('i-x-circle')}<div>
                 <h2>We're not hiring in ${pincode} right now.</h2>
-                <p>Your application is saved — we'll contact you if openings start near you. Entered the wrong pincode? Try again above.</p>${metaLead ? contactHTML : ''}</div></div>`;
-            showStickyCallBar(!!metaLead);
+                <p>Your application is saved — we'll contact you if openings start near you. Entered the wrong pincode? Try again above.</p>${adLead ? contactHTML : ''}</div></div>`;
+            showStickyCallBar(!!adLead);
             setChecking(false);
             return;
         }
@@ -1043,7 +1069,7 @@
             `*Qualification:* ${a.qualification}\n` +
             `*Equipment:* ${a.equipment || 'None'}\n` +
             `*Application ID:* ${applicationId}` +
-            (metaLead ? `\n*Source:* Meta` + (metaLead.lead ? `\n*Meta Lead ID:* ${metaLead.lead}` : '') : '');
+            (adLead ? `\n*Source:* ${adLead.source}` + (adLead.lead ? `\n*${adLead.source} Lead ID:* ${adLead.lead}` : '') : '');
         const waLink = `https://wa.me/919082078172?text=${encodeURIComponent(waMessage)}`;
         const areaLine = match === 'exact'
             ? `Great news — we're hiring in ${pincode}.`
