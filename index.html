@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phlebotomist Jobs – Thyrocare | Check Availability &amp; Apply</title>
-    <meta name="description" content="Thyrocare is hiring part-time phlebotomists for home blood sample collection, 6–11 AM. Check if we're hiring near your pincode and apply in 2 minutes.">
+    <meta name="description" content="Thyrocare is hiring part-time phlebotomists for home blood sample collection, 6–11 AM. Apply in 2 minutes and check if we're hiring near your pincode.">
     <meta name="theme-color" content="#2E3649">
 
     <!-- Open Graph / WhatsApp Preview -->
     <link rel="canonical" href="https://thyrocarejobs.in/">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Phlebotomist Jobs – Thyrocare">
-    <meta property="og:description" content="Part-time home sample collection, 6–11 AM. Check your pincode and apply in 2 minutes.">
+    <meta property="og:description" content="Part-time home sample collection, 6–11 AM. Apply in 2 minutes and check openings near your pincode.">
     <meta property="og:url" content="https://thyrocarejobs.in/">
     <meta property="og:image" content="https://thyrocarejobs.in/assets/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Phlebotomist Jobs – Thyrocare">
-    <meta name="twitter:description" content="Part-time home sample collection, 6–11 AM. Check your pincode and apply in 2 minutes.">
+    <meta name="twitter:description" content="Part-time home sample collection, 6–11 AM. Apply in 2 minutes and check openings near your pincode.">
     <meta name="twitter:image" content="https://thyrocarejobs.in/assets/og-image.png">
 
     <!-- Favicons -->
@@ -187,6 +187,14 @@
         @media (min-width: 768px) { .check-card { padding: 28px 32px; } }
         .check-card h2 { font-size: 1.125rem; font-weight: 700; margin-bottom: 4px; }
         .check-card .muted { color: var(--text-muted); font-size: .9375rem; margin-bottom: 16px; }
+        #applyCard { scroll-margin-top: 72px; }
+        .step-tag { font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--brand-accent-dark); margin-bottom: 4px; }
+        .pin-result:not(:empty) { margin-top: 16px; }
+        .link-btn {
+            display: inline-flex; align-items: center; min-height: 44px; margin-top: 8px; padding: 0;
+            background: none; border: none; cursor: pointer;
+            font-size: .875rem; font-weight: 700; color: var(--brand-primary); text-decoration: underline;
+        }
         .check-row { display: flex; flex-direction: column; gap: 12px; }
         #checkBtn { width: 100%; }
         @media (min-width: 560px) {
@@ -342,7 +350,6 @@
         .step p { font-size: .875rem; color: var(--text-muted); }
 
         /* ---------- Result ---------- */
-        #resultSection { scroll-margin-top: 80px; }
         .alert {
             display: flex; gap: 14px; align-items: flex-start;
             padding: 16px 18px; border-radius: var(--radius);
@@ -358,10 +365,7 @@
         .alert h2, .alert p { color: inherit; }
         .alert p { color: var(--text); opacity: .85; }
 
-        .result-grid { display: grid; gap: 20px; margin-top: 20px; }
-        @media (min-width: 900px) { .result-grid { grid-template-columns: 5fr 7fr; align-items: start; gap: 24px; } }
-
-        .job-card { padding: 20px; }
+        .job-card { padding: 20px; max-width: 760px; }
         @media (min-width: 768px) { .job-card { padding: 24px; } }
         .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
         .card-head h2, .card-head h3 { font-size: 1.125rem; font-weight: 800; line-height: 1.3; }
@@ -388,9 +392,6 @@
             color: var(--warning); font-size: .875rem; font-weight: 600;
         }
 
-        .form-card { padding: 20px; }
-        @media (min-width: 768px) { .form-card { padding: 28px; } }
-        .form-card .muted { color: var(--text-muted); font-size: .9375rem; margin: -8px 0 20px; }
         .form-grid { display: grid; gap: 16px; }
         @media (min-width: 640px) { .form-grid { grid-template-columns: 1fr 1fr; gap: 18px 16px; } .span-2 { grid-column: span 2; } }
         .field label, .field legend { display: block; font-size: .875rem; font-weight: 700; margin-bottom: 6px; color: var(--text); }
@@ -494,7 +495,7 @@
             <div class="hero-content">
                 <span class="eyebrow"><span class="dot" aria-hidden="true"></span>Now hiring · Part-time</span>
                 <h1>Phlebotomist – <span class="accent">Home Sample Collection</span></h1>
-                <p class="hero-sub">Check if we're hiring in your area and apply in 2 minutes.</p>
+                <p class="hero-sub">Apply in 2 minutes, then check if we're hiring near your pincode.</p>
             </div>
             <div class="hero-media">
                 <img src="assets/phlebo.webp" alt="Thyrocare phlebotomist collecting a blood sample at home" class="hero-photo" width="360" height="450" decoding="async" loading="lazy">
@@ -505,110 +506,15 @@
 
 <main>
     <div class="container">
-        <!-- Pincode check card inside hero fold -->
+        <!-- Application card inside hero fold: step 1 form, step 2 pincode -->
         <div class="check-wrap">
-            <div class="card check-card">
-                <h2>Check availability in your area</h2>
-                <p class="muted">Enter your area's 6-digit pincode, e.g. 400001</p>
-                <div class="check-row">
-                    <div class="input-icon">
-                        <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
-                        <label for="pincodeInput" class="sr-only">6-digit pincode</label>
-                        <input type="text" id="pincodeInput" class="input" placeholder="Enter 6-digit pincode"
-                               maxlength="6" inputmode="numeric" autocomplete="postal-code"
-                               aria-describedby="errorMsg">
-                    </div>
-                    <button type="button" id="checkBtn" class="btn btn-primary">
-                        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-search"/></svg>
-                        Check availability
-                    </button>
-                </div>
-                <div id="errorMsg" class="field-error" role="alert">
-                    <svg class="icon icon-sm" aria-hidden="true"><use href="#i-alert"/></svg><span></span>
-                </div>
-                <div class="status-line" id="statsInfo" aria-live="polite">
-                    <span class="status-dot" aria-hidden="true"></span><span class="status-text">Loading active locations…</span>
-                </div>
-            </div>
-        </div>
+            <div class="card check-card" id="applyCard">
 
-        <!-- 3. Highlights strip -->
-        <section aria-labelledby="highlightsTitle">
-            <h2 class="sr-only" id="highlightsTitle">Job highlights</h2>
-            <div class="highlights">
-                <div class="card highlight">
-                    <span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span>
-                    <strong>6:00 AM – 11:00 AM</strong><span>Morning shift only</span>
-                </div>
-                <div class="card highlight">
-                    <span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-briefcase"/></svg></span>
-                    <strong>Part-time</strong><span>Fits around your day</span>
-                </div>
-                <div class="card highlight">
-                    <span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-rupee"/></svg></span>
-                    <strong>Order-wise payout</strong><span>Plus performance incentive</span>
-                </div>
-                <div class="card highlight">
-                    <span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span>
-                    <strong>Near your pincode</strong><span>Home visits close to you</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mobile photo card under highlights (<900px) -->
-        <figure class="mobile-photo-card">
-            <img src="assets/phlebo.webp" alt="Thyrocare phlebotomist collecting a blood sample at home" class="mobile-photo" width="640" height="400" decoding="async" loading="lazy">
-            <figcaption class="mobile-photo-caption">Home sample collection · 6–11 AM</figcaption>
-        </figure>
-
-        <!-- 4. Result + job details + application form -->
-        <section id="resultSection" hidden aria-live="polite">
-            <div id="resultDisplay"></div>
-            <div class="result-grid" id="dynamicContent" hidden>
-                <!-- Job details -->
-                <article class="card job-card">
-                    <span class="badge">Opportunity</span>
-                    <h2 class="job-title">Home Blood Sample Collection with Second Medic (Thyrocare)</h2>
-                    <dl class="details">
-                        <div class="detail">
-                            <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-user"/></svg></span>
-                            <div><dt>Role</dt><dd>Phlebotomist</dd></div>
-                        </div>
-                        <div class="detail">
-                            <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-award"/></svg></span>
-                            <div><dt>Experience required</dt><dd>Minimum 1 year using Vacutainer Needle Holder</dd></div>
-                        </div>
-                        <div class="detail">
-                            <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-pin"/></svg></span>
-                            <div><dt>Location</dt><dd>Nearest to your PIN code</dd></div>
-                        </div>
-                        <div class="detail">
-                            <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-clock"/></svg></span>
-                            <div><dt>Timing</dt><dd>6:00 AM – 11:00 AM</dd></div>
-                        </div>
-                        <div class="detail">
-                            <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-briefcase"/></svg></span>
-                            <div><dt>Job type</dt><dd>Part-time</dd></div>
-                        </div>
-                        <div class="detail">
-                            <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-rupee"/></svg></span>
-                            <div><dt>Payout</dt><dd>Performance incentive ₹600-1000/month + up to 20% add-on incentive</dd></div>
-                        </div>
-                        <div class="detail">
-                            <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-list"/></svg></span>
-                            <div><dt>Requirements</dt><dd>Bike/Scooter, Refrigerator, Centrifuge, Android phone (BTech &amp; GPS Camera app)</dd></div>
-                        </div>
-                    </dl>
-                    <div class="callout">
-                        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"/></svg>
-                        <span>Please note – We pay order-wise payout, no fixed salary.</span>
-                    </div>
-                </article>
-
-                <!-- Application form -->
-                <div class="card form-card" id="screeningFormContainer">
-                    <div class="card-head"><h2>Apply for this position</h2></div>
-                    <p class="muted">Fields marked <span class="req" aria-hidden="true">*</span> are required.</p>
+                <!-- Step 1: application form -->
+                <div id="formStep">
+                    <p class="step-tag">Step 1 of 2 · Your details</p>
+                    <h2>Apply for this position</h2>
+                    <p class="muted">Takes 2 minutes. Fields marked <span class="req" aria-hidden="true">*</span> are required.</p>
 
                     <form id="candidateForm" novalidate>
                         <div class="form-grid">
@@ -658,15 +564,115 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <input type="hidden" id="submittedPincode" value="">
                         <div class="form-foot">
                             <button type="submit" id="submitBtn" class="btn btn-primary btn-block">Submit application</button>
                             <p class="note"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"/></svg>We pay you order wise, not fixed salary.</p>
                         </div>
                     </form>
-                    <div id="formStatus" class="form-alert" aria-live="polite"></div>
+                </div>
+
+                <!-- Step 2: pincode verification -->
+                <div id="pinStep" hidden>
+                    <p class="step-tag">Step 2 of 2 · Verify your area</p>
+                    <h2>Enter your area pincode</h2>
+                    <p class="muted">Your details are saved. Now enter your area's 6-digit pincode so we can check openings near you, e.g. 400001.</p>
+                    <div class="check-row">
+                        <div class="input-icon">
+                            <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
+                            <label for="pincodeInput" class="sr-only">6-digit pincode</label>
+                            <input type="text" id="pincodeInput" class="input" placeholder="Enter 6-digit pincode"
+                                   maxlength="6" inputmode="numeric" autocomplete="postal-code"
+                                   aria-describedby="errorMsg">
+                        </div>
+                        <button type="button" id="checkBtn" class="btn btn-primary">
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="#i-search"/></svg>
+                            Verify pincode
+                        </button>
+                    </div>
+                    <div id="errorMsg" class="field-error" role="alert">
+                        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-alert"/></svg><span></span>
+                    </div>
+                    <div class="status-line" id="statsInfo" aria-live="polite">
+                        <span class="status-dot" aria-hidden="true"></span><span class="status-text">Loading active locations…</span>
+                    </div>
+                    <div id="resultDisplay" class="pin-result" aria-live="polite"></div>
+                    <button type="button" id="editBtn" class="link-btn">← Edit my details</button>
+                </div>
+
+                <div id="formStatus" class="form-alert" aria-live="polite"></div>
+            </div>
+        </div>
+
+        <!-- 3. Highlights strip -->
+        <section aria-labelledby="highlightsTitle">
+            <h2 class="sr-only" id="highlightsTitle">Job highlights</h2>
+            <div class="highlights">
+                <div class="card highlight">
+                    <span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span>
+                    <strong>6:00 AM – 11:00 AM</strong><span>Morning shift only</span>
+                </div>
+                <div class="card highlight">
+                    <span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-briefcase"/></svg></span>
+                    <strong>Part-time</strong><span>Fits around your day</span>
+                </div>
+                <div class="card highlight">
+                    <span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-rupee"/></svg></span>
+                    <strong>Order-wise payout</strong><span>Plus performance incentive</span>
+                </div>
+                <div class="card highlight">
+                    <span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span>
+                    <strong>Near your pincode</strong><span>Home visits close to you</span>
                 </div>
             </div>
+        </section>
+
+        <!-- Mobile photo card under highlights (<900px) -->
+        <figure class="mobile-photo-card">
+            <img src="assets/phlebo.webp" alt="Thyrocare phlebotomist collecting a blood sample at home" class="mobile-photo" width="640" height="400" decoding="async" loading="lazy">
+            <figcaption class="mobile-photo-caption">Home sample collection · 6–11 AM</figcaption>
+        </figure>
+
+        <!-- 4. Job details -->
+        <section aria-labelledby="roleTitle" class="role-section">
+            <h2 class="section-title" id="roleTitle">About the role</h2>
+            <article class="card job-card">
+                <span class="badge">Opportunity</span>
+                <h3 class="job-title">Home Blood Sample Collection with Second Medic (Thyrocare)</h3>
+                <dl class="details">
+                    <div class="detail">
+                        <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-user"/></svg></span>
+                        <div><dt>Role</dt><dd>Phlebotomist</dd></div>
+                    </div>
+                    <div class="detail">
+                        <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-award"/></svg></span>
+                        <div><dt>Experience required</dt><dd>Minimum 1 year using Vacutainer Needle Holder</dd></div>
+                    </div>
+                    <div class="detail">
+                        <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-pin"/></svg></span>
+                        <div><dt>Location</dt><dd>Nearest to your PIN code</dd></div>
+                    </div>
+                    <div class="detail">
+                        <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-clock"/></svg></span>
+                        <div><dt>Timing</dt><dd>6:00 AM – 11:00 AM</dd></div>
+                    </div>
+                    <div class="detail">
+                        <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-briefcase"/></svg></span>
+                        <div><dt>Job type</dt><dd>Part-time</dd></div>
+                    </div>
+                    <div class="detail">
+                        <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-rupee"/></svg></span>
+                        <div><dt>Payout</dt><dd>Performance incentive ₹600-1000/month + up to 20% add-on incentive</dd></div>
+                    </div>
+                    <div class="detail">
+                        <span class="ic"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-list"/></svg></span>
+                        <div><dt>Requirements</dt><dd>Bike/Scooter, Refrigerator, Centrifuge, Android phone (BTech &amp; GPS Camera app)</dd></div>
+                    </div>
+                </dl>
+                <div class="callout">
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"/></svg>
+                    <span>Please note – We pay order-wise payout, no fixed salary.</span>
+                </div>
+            </article>
         </section>
 
         <!-- How to apply steps -->
@@ -674,8 +680,8 @@
             <h2 class="section-title" id="stepsTitle">How to apply</h2>
             <p class="section-sub">Three quick steps from your phone.</p>
             <div class="steps">
-                <div class="card step"><span class="step-num">1</span><div><h3>Check your pincode</h3><p>See if we're hiring in or near your area.</p></div></div>
-                <div class="card step"><span class="step-num">2</span><div><h3>Fill the screening form</h3><p>Your experience, qualification and equipment.</p></div></div>
+                <div class="card step"><span class="step-num">1</span><div><h3>Fill the screening form</h3><p>Your experience, qualification and equipment.</p></div></div>
+                <div class="card step"><span class="step-num">2</span><div><h3>Verify your pincode</h3><p>We check if we're hiring in or near your area.</p></div></div>
                 <div class="card step"><span class="step-num">3</span><div><h3>Confirm on WhatsApp</h3><p>Your application is sent to our hiring manager.</p></div></div>
             </div>
         </section>
@@ -732,26 +738,37 @@
     }
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ==================== META LEAD LINK ====================
-    // Personal links for Meta leads, e.g.
-    // ?src=meta&pin=413112&name=...&phone=9075438009&city=...&email=...&bike=yes&lead=1145794104597658
-    function readMetaLead() {
+    // ==================== AD LEAD LINK (META + GOOGLE) ====================
+    // Visitors from Meta or Google ads are tagged with their source. Personal links
+    // can also prefill the form, e.g.
+    //   ?src=meta&pin=413112&name=...&phone=9075438009&city=...&email=...&bike=yes&lead=1145794104597658
+    //   ?src=google&pin=413112&name=...&phone=9075438009&lead=...
+    // Plain ad clicks are recognised from utm_source, gclid/gbraid/wbraid (Google) or fbclid (Meta).
+    function readAdLead() {
         const params = new URLSearchParams(window.location.search);
         if (![...params.keys()].length) return null;
         const text = (key) => (params.get(key) || '').trim().slice(0, 100);
         const digits = (key) => (params.get(key) || '').replace(/\D/g, '');
+        const sourceOf = (value) => {
+            const v = value.toLowerCase();
+            if (['meta', 'facebook', 'fb', 'instagram', 'ig'].includes(v)) return 'Meta';
+            if (['google', 'gads', 'adwords', 'youtube'].includes(v)) return 'Google';
+            return '';
+        };
+
+        const lead = text('lead').replace(/[^\w-]/g, '').slice(0, 40);
+        const clickId = text('gclid') || text('gbraid') || text('wbraid');
+        const source = sourceOf(text('src')) || sourceOf(text('utm_source'))
+            || (clickId ? 'Google' : '')
+            || (params.has('fbclid') || lead ? 'Meta' : '');
+        if (!source) return null;
 
         const pinRaw = digits('pin');
         let phone = digits('phone');
         if (phone.length > 10 && (phone.startsWith('91') || phone.startsWith('0'))) phone = phone.slice(-10);
-        const lead = digits('lead').slice(0, 30);
-        const isMeta = text('src').toLowerCase() === 'meta' || lead !== '';
-        if (!isMeta) return null;
 
-        // Remove personal details from the address bar so they aren't re-shared.
-        try { history.replaceState(null, '', window.location.pathname + window.location.hash); } catch (e) {}
-
-        return {
+        const result = {
+            source: source,
             pin: pinRaw.length === 6 ? pinRaw : '',
             name: text('name'),
             phone: /^[6-9]\d{9}$/.test(phone) ? phone : '',
@@ -759,15 +776,27 @@
             email: text('email'),
             bike: text('bike').toLowerCase() === 'yes',
             lead: lead,
+            clickId: clickId.slice(0, 120),
+            campaign: text('utm_campaign'),
         };
-    }
-    const metaLead = readMetaLead();
 
-    function applyMetaPrefill() {
-        if (!metaLead) return;
-        if (metaLead.name) document.getElementById('fullName').value = metaLead.name;
-        if (metaLead.phone) document.getElementById('phone').value = metaLead.phone;
-        if (metaLead.bike) {
+        // Remove personal details from the address bar so they aren't re-shared
+        // (ad tracking parameters such as gclid/utm_* are kept).
+        const personal = ['pin', 'name', 'phone', 'city', 'email', 'bike', 'lead'];
+        if (personal.some(k => params.has(k))) {
+            personal.forEach(k => params.delete(k));
+            const rest = params.toString();
+            try { history.replaceState(null, '', window.location.pathname + (rest ? '?' + rest : '') + window.location.hash); } catch (e) {}
+        }
+        return result;
+    }
+    const adLead = readAdLead();
+
+    function applyAdPrefill() {
+        if (!adLead) return;
+        if (adLead.name) document.getElementById('fullName').value = adLead.name;
+        if (adLead.phone) document.getElementById('phone').value = adLead.phone;
+        if (adLead.bike) {
             const bikeBox = document.querySelector('.chip input[value="Bike/Scooter"]');
             if (bikeBox) {
                 bikeBox.checked = true;
@@ -807,101 +836,30 @@
         }
     }
 
-    // ==================== PINCODE CHECK ====================
-    const inputEl = document.getElementById('pincodeInput');
-    const resultSection = document.getElementById('resultSection');
-    const resultDiv = document.getElementById('resultDisplay');
-    const dynamicDiv = document.getElementById('dynamicContent');
+    // ==================== STEPS ====================
+    // Step 1 = application form, step 2 = pincode check, then submit.
+    const applyCard = document.getElementById('applyCard');
+    const formStep = document.getElementById('formStep');
+    const pinStep = document.getElementById('pinStep');
+    const formStatus = document.getElementById('formStatus');
 
-    inputEl.addEventListener('input', (e) => {
-        e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
-        showFieldError(inputEl, '');
-        showStickyCallBar(false);
-    });
-
-    function revealResult() {
-        resultSection.hidden = false;
-        resultSection.classList.remove('reveal');
-        void resultSection.offsetWidth;
-        resultSection.classList.add('reveal');
-        resultSection.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    function reveal(el) {
+        el.classList.remove('reveal');
+        void el.offsetWidth;
+        el.classList.add('reveal');
+        applyCard.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
     }
 
-    function resetForm(pincode) {
-        const form = document.getElementById('candidateForm');
-        form.reset();
-        form.hidden = false;
-        document.querySelectorAll('.chip').forEach(c => c.classList.remove('checked'));
-        form.querySelectorAll('.input').forEach(i => showFieldError(i, ''));
-        document.getElementById('formStatus').innerHTML = '';
-        document.getElementById('submittedPincode').value = pincode;
-        setSubmitting(false);
-        applyMetaPrefill();
+    function showStep(step) {
+        formStep.hidden = step !== 'form';
+        pinStep.hidden = step !== 'pin';
+        reveal(step === 'form' ? formStep : pinStep);
     }
 
-    function checkPincode() {
-        if (!pincodesLoaded) {
-            resultDiv.innerHTML = `<div class="alert alert-warning">${icon('i-clock')}<div><h2>Loading pincodes, please wait…</h2></div></div>`;
-            dynamicDiv.hidden = true;
-            showStickyCallBar(false);
-            revealResult();
-            return;
-        }
-        const rawInput = inputEl.value.trim();
-        if (rawInput === '') {
-            showFieldError(inputEl, 'Enter a pincode');
-            resultSection.hidden = true;
-            showStickyCallBar(false);
-            return;
-        }
-        if (rawInput.length !== 6) {
-            showFieldError(inputEl, 'Pincode must be 6 digits');
-            resultSection.hidden = true;
-            showStickyCallBar(false);
-            return;
-        }
-        showFieldError(inputEl, '');
-        const pincode = rawInput;
-
-        if (exactSet.has(pincode)) {
-            resultDiv.innerHTML = `<div class="alert alert-success">${icon('i-check-circle')}<div>
-                <h2>Great news — we're hiring in ${pincode}.</h2>
-                <p>Review the role below and apply.</p>${contactHTML}</div></div>`;
-            dynamicDiv.hidden = false;
-            resetForm(pincode);
-            showStickyCallBar(true);
-        } else if (prefix5Set.has(pincode.substring(0, 5))) {
-            const first4 = pincode.substring(0, 4);
-            resultDiv.innerHTML = `<div class="alert alert-warning">${icon('i-pin')}<div>
-                <h2>We're not hiring in ${pincode} itself, but we have openings close by.</h2>
-                <p>Openings are available in nearby pincodes (${first4}XX). You can still apply.</p>${contactHTML}</div></div>`;
-            dynamicDiv.hidden = false;
-            resetForm(pincode);
-            showStickyCallBar(true);
-        } else {
-            resultDiv.innerHTML = `<div class="alert alert-danger">${icon('i-x-circle')}<div>
-                <h2>We're not hiring in ${pincode} right now.</h2>
-                <p>Try a nearby pincode.</p>${metaLead ? contactHTML : ''}</div></div>`;
-            dynamicDiv.hidden = true;
-            showStickyCallBar(!!metaLead);
-        }
-        revealResult();
-    }
-
-    document.getElementById('checkBtn').addEventListener('click', checkPincode);
-    inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); checkPincode(); } });
-
-    loadPincodes().then(() => {
-        if (pincodesLoaded && metaLead && metaLead.pin) {
-            inputEl.value = metaLead.pin;
-            checkPincode();
-        }
-    });
-
-    // ==================== APPLICATION FORM ====================
+    // ==================== STEP 1: APPLICATION FORM ====================
     const form = document.getElementById('candidateForm');
-    const submitBtn = document.getElementById('submitBtn');
     const phoneInput = document.getElementById('phone');
+    let applicant = null;
 
     phoneInput.addEventListener('input', (e) => {
         e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
@@ -914,11 +872,7 @@
             if (el.getAttribute('aria-invalid') === 'true') showFieldError(el, '');
         });
     });
-
-    function setSubmitting(on) {
-        submitBtn.disabled = on;
-        submitBtn.innerHTML = on ? '<span class="spinner" aria-hidden="true"></span>Submitting…' : 'Submit application';
-    }
+    applyAdPrefill();
 
     function validateForm() {
         const f = {
@@ -948,76 +902,192 @@
         return !first;
     }
 
+    // ==================== GOOGLE SHEET ====================
+    // Every applicant is saved twice under the same application_id:
+    //   stage "Form submitted"  – right after step 1, pincode still blank
+    //   stage "Pincode checked" – after step 2, with pincode + match result
+    const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxOt1OXB7aQsmaMYPYpapd2CKAxtQkkKRPWbfa_I_luIRBe38rLIGl9t9sI64hy0qaJ/exec";
+    const applicationId = 'APP-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+
+    function saveToSheet(stage, pincode, pincodeMatch) {
+        const a = applicant;
+        const row = {
+            timestamp: new Date().toISOString(),
+            application_id: applicationId,
+            stage: stage,
+            pincode: pincode,
+            pincode_match: pincodeMatch,
+            name: a.name,
+            phone: a.phone,
+            experience_years: a.experience,
+            vacutainer_experience: a.vacutainerExp,
+            qualification: a.qualification,
+            equipment: a.equipment,
+            source: adLead ? adLead.source : 'Website',
+            meta_lead_id: adLead && adLead.source === 'Meta' ? adLead.lead : '',
+            google_lead_id: adLead && adLead.source === 'Google' ? adLead.lead : '',
+            google_click_id: adLead ? adLead.clickId : '',
+            utm_campaign: adLead ? adLead.campaign : '',
+            city: adLead ? adLead.city : '',
+            email: adLead ? adLead.email : ''
+        };
+        return fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(row)
+        });
+    }
+
+    // ==================== STEP 1 SUBMIT: SAVE FORM ====================
+    const submitBtn = document.getElementById('submitBtn');
+    function setSubmitting(on) {
+        submitBtn.disabled = on;
+        submitBtn.innerHTML = on ? '<span class="spinner" aria-hidden="true"></span>Submitting…' : 'Submit application';
+    }
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const status = document.getElementById('formStatus');
-        status.innerHTML = '';
-        if (!validateForm()) return;
+        formStatus.innerHTML = '';
+        if (submitBtn.disabled || !validateForm()) return;
 
-        setSubmitting(true);
-
-        const name = document.getElementById('fullName').value.trim();
-        const phone = phoneInput.value.trim();
-        const experience = document.getElementById('experience').value;
-        const vacutainerExp = document.getElementById('vacutainerExp').value;
-        const qualification = document.getElementById('qualification').value;
-        const equipment = Array.from(form.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value).join(', ');
-        const pincode = document.getElementById('submittedPincode').value;
-
-        const formData = {
-            timestamp: new Date().toISOString(),
-            pincode: pincode,
-            name: name,
-            phone: phone,
-            experience_years: experience,
-            vacutainer_experience: vacutainerExp,
-            qualification: qualification,
-            equipment: equipment,
-            source: metaLead ? 'Meta' : 'Website',
-            meta_lead_id: metaLead ? metaLead.lead : '',
-            city: metaLead ? metaLead.city : '',
-            email: metaLead ? metaLead.email : ''
+        applicant = {
+            name: document.getElementById('fullName').value.trim(),
+            phone: phoneInput.value.trim(),
+            experience: document.getElementById('experience').value,
+            vacutainerExp: document.getElementById('vacutainerExp').value,
+            qualification: document.getElementById('qualification').value,
+            equipment: Array.from(form.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value).join(', '),
         };
 
-        const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxOt1OXB7aQsmaMYPYpapd2CKAxtQkkKRPWbfa_I_luIRBe38rLIGl9t9sI64hy0qaJ/exec";
-
+        setSubmitting(true);
         try {
-            await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const waMessage =
-                `🩸 *New Phlebotomist Application*\n\n` +
-                `*Name:* ${name}\n` +
-                `*Phone:* ${phone}\n` +
-                `*Pincode:* ${pincode}\n` +
-                `*Experience:* ${experience} years\n` +
-                `*Vacutainer:* ${vacutainerExp}\n` +
-                `*Qualification:* ${qualification}\n` +
-                `*Equipment:* ${equipment || 'None'}` +
-                (metaLead ? `\n*Source:* Meta` + (metaLead.lead ? `\n*Meta Lead ID:* ${metaLead.lead}` : '') : '');
-            const waLink = `https://wa.me/919082078172?text=${encodeURIComponent(waMessage)}`;
-
-            form.hidden = true;
-            status.innerHTML = `<div class="success-panel reveal">
-                <div class="big-ic">${icon('i-check-circle')}</div>
-                <h3>Application submitted</h3>
-                <p>Opening WhatsApp to send your details to our hiring manager…</p>
-                <div style="margin-top: 16px;">
-                    <a href="${waLink}" class="btn btn-primary" target="_blank" rel="noopener">Continue to WhatsApp</a>
-                </div>
-            </div>`;
-            setTimeout(() => { window.location.href = waLink; }, 700);
+            await saveToSheet('Form submitted', '', '');
         } catch (err) {
             console.error(err);
-            status.innerHTML = `<div class="alert alert-danger">${icon('i-alert')}<div>
+            formStatus.innerHTML = `<div class="alert alert-danger">${icon('i-alert')}<div>
                 <h2>Submission failed.</h2>
-                <p>Please try again or contact Sandhya directly on <a href="tel:+919082078172">9082078172</a>.</p></div></div>`;
+                <p>Please check your internet and try again, or contact Sandhya directly on <a href="tel:+919082078172">9082078172</a>.</p></div></div>`;
             setSubmitting(false);
+            return;
         }
+        setSubmitting(false);
+        checkedPincodes.clear();
+
+        resultDiv.innerHTML = '';
+        showFieldError(inputEl, '');
+        showStep('pin');
+        inputEl.focus({ preventScroll: true });
     });
+
+    document.getElementById('editBtn').addEventListener('click', () => {
+        resultDiv.innerHTML = '';
+        showStickyCallBar(false);
+        showStep('form');
+    });
+
+    // ==================== STEP 2: PINCODE CHECK ====================
+    const inputEl = document.getElementById('pincodeInput');
+    const checkBtn = document.getElementById('checkBtn');
+    const resultDiv = document.getElementById('resultDisplay');
+    const pincodesReady = loadPincodes();
+    const checkedPincodes = new Set();
+    if (adLead && adLead.pin) inputEl.value = adLead.pin;
+
+    inputEl.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
+        showFieldError(inputEl, '');
+    });
+
+    function setChecking(on) {
+        checkBtn.disabled = on;
+        inputEl.readOnly = on;
+        checkBtn.innerHTML = on
+            ? '<span class="spinner" aria-hidden="true"></span>Checking…'
+            : `${icon('i-search', 'icon icon-sm')} Verify pincode`;
+    }
+
+    async function checkPincode() {
+        if (checkBtn.disabled) return;
+        if (!applicant) { showStep('form'); return; }
+
+        const pincode = inputEl.value.trim();
+        if (pincode === '') { showFieldError(inputEl, 'Enter a pincode'); return; }
+        if (pincode.length !== 6) { showFieldError(inputEl, 'Pincode must be 6 digits'); return; }
+        showFieldError(inputEl, '');
+        resultDiv.innerHTML = '';
+
+        setChecking(true);
+        await pincodesReady;
+        if (!pincodesLoaded) {
+            resultDiv.innerHTML = `<div class="alert alert-warning">${icon('i-alert')}<div>
+                <h2>We couldn't load our locations.</h2>
+                <p>Your details are saved. Please refresh the page and try again, or call our hiring manager.</p>${contactHTML}</div></div>`;
+            setChecking(false);
+            return;
+        }
+
+        const match = exactSet.has(pincode) ? 'exact'
+            : prefix5Set.has(pincode.substring(0, 5)) ? 'nearby'
+            : null;
+
+        // Record the pincode result for everyone (once per pincode tried).
+        if (!checkedPincodes.has(pincode)) {
+            checkedPincodes.add(pincode);
+            try {
+                await saveToSheet('Pincode checked', pincode, match === 'exact' ? 'Exact' : match === 'nearby' ? 'Nearby' : 'Not hiring');
+            } catch (err) {
+                console.error(err); // form row is already saved; carry on
+            }
+        }
+
+        if (!match) {
+            resultDiv.innerHTML = `<div class="alert alert-danger reveal">${icon('i-x-circle')}<div>
+                <h2>We're not hiring in ${pincode} right now.</h2>
+                <p>Your application is saved — we'll contact you if openings start near you. Entered the wrong pincode? Try again above.</p>${adLead ? contactHTML : ''}</div></div>`;
+            showStickyCallBar(!!adLead);
+            setChecking(false);
+            return;
+        }
+
+        showStickyCallBar(true);
+        showSuccess(pincode, match);
+    }
+
+    checkBtn.addEventListener('click', checkPincode);
+    inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); checkPincode(); } });
+
+    function showSuccess(pincode, match) {
+        const a = applicant;
+        const waMessage =
+            `🩸 *New Phlebotomist Application*\n\n` +
+            `*Name:* ${a.name}\n` +
+            `*Phone:* ${a.phone}\n` +
+            `*Pincode:* ${pincode}${match === 'nearby' ? ' (nearby openings)' : ''}\n` +
+            `*Experience:* ${a.experience} years\n` +
+            `*Vacutainer:* ${a.vacutainerExp}\n` +
+            `*Qualification:* ${a.qualification}\n` +
+            `*Equipment:* ${a.equipment || 'None'}\n` +
+            `*Application ID:* ${applicationId}` +
+            (adLead ? `\n*Source:* ${adLead.source}` + (adLead.lead ? `\n*${adLead.source} Lead ID:* ${adLead.lead}` : '') : '');
+        const waLink = `https://wa.me/919082078172?text=${encodeURIComponent(waMessage)}`;
+        const areaLine = match === 'exact'
+            ? `Great news — we're hiring in ${pincode}.`
+            : `We have openings close to ${pincode} (${pincode.substring(0, 4)}XX).`;
+
+        pinStep.hidden = true;
+        formStatus.innerHTML = `<div class="success-panel">
+            <div class="big-ic">${icon('i-check-circle')}</div>
+            <h3>Application submitted</h3>
+            <p>${areaLine} Opening WhatsApp to send your details to our hiring manager…</p>
+            <div style="margin-top: 16px;">
+                <a href="${waLink}" class="btn btn-primary" target="_blank" rel="noopener">Continue to WhatsApp</a>
+            </div>
+            ${contactHTML}
+        </div>`;
+        reveal(formStatus);
+        setTimeout(() => { window.location.href = waLink; }, 700);
+    }
 </script>
 </body>
 </html>
