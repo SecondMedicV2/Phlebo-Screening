@@ -565,7 +565,7 @@
                             </fieldset>
                         </div>
                         <div class="form-foot">
-                            <button type="submit" id="submitBtn" class="btn btn-primary btn-block">Submit &amp; verify pincode</button>
+                            <button type="submit" id="submitBtn" class="btn btn-primary btn-block">Submit application</button>
                             <p class="note"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"/></svg>We pay you order wise, not fixed salary.</p>
                         </div>
                     </form>
@@ -575,7 +575,7 @@
                 <div id="pinStep" hidden>
                     <p class="step-tag">Step 2 of 2 · Verify your area</p>
                     <h2>Enter your area pincode</h2>
-                    <p class="muted">We'll check if we're hiring in or near your area, e.g. 400001.</p>
+                    <p class="muted">Your details are saved. Now enter your area's 6-digit pincode so we can check openings near you, e.g. 400001.</p>
                     <div class="check-row">
                         <div class="input-icon">
                             <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
@@ -879,10 +879,51 @@
         return !first;
     }
 
-    form.addEventListener('submit', (e) => {
+    // ==================== GOOGLE SHEET ====================
+    // Every applicant is saved twice under the same application_id:
+    //   stage "Form submitted"  – right after step 1, pincode still blank
+    //   stage "Pincode checked" – after step 2, with pincode + match result
+    const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxOt1OXB7aQsmaMYPYpapd2CKAxtQkkKRPWbfa_I_luIRBe38rLIGl9t9sI64hy0qaJ/exec";
+    const applicationId = 'APP-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+
+    function saveToSheet(stage, pincode, pincodeMatch) {
+        const a = applicant;
+        const row = {
+            timestamp: new Date().toISOString(),
+            application_id: applicationId,
+            stage: stage,
+            pincode: pincode,
+            pincode_match: pincodeMatch,
+            name: a.name,
+            phone: a.phone,
+            experience_years: a.experience,
+            vacutainer_experience: a.vacutainerExp,
+            qualification: a.qualification,
+            equipment: a.equipment,
+            source: metaLead ? 'Meta' : 'Website',
+            meta_lead_id: metaLead ? metaLead.lead : '',
+            city: metaLead ? metaLead.city : '',
+            email: metaLead ? metaLead.email : ''
+        };
+        return fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(row)
+        });
+    }
+
+    // ==================== STEP 1 SUBMIT: SAVE FORM ====================
+    const submitBtn = document.getElementById('submitBtn');
+    function setSubmitting(on) {
+        submitBtn.disabled = on;
+        submitBtn.innerHTML = on ? '<span class="spinner" aria-hidden="true"></span>Submitting…' : 'Submit application';
+    }
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         formStatus.innerHTML = '';
-        if (!validateForm()) return;
+        if (submitBtn.disabled || !validateForm()) return;
 
         applicant = {
             name: document.getElementById('fullName').value.trim(),
@@ -892,6 +933,20 @@
             qualification: document.getElementById('qualification').value,
             equipment: Array.from(form.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value).join(', '),
         };
+
+        setSubmitting(true);
+        try {
+            await saveToSheet('Form submitted', '', '');
+        } catch (err) {
+            console.error(err);
+            formStatus.innerHTML = `<div class="alert alert-danger">${icon('i-alert')}<div>
+                <h2>Submission failed.</h2>
+                <p>Please check your internet and try again, or contact Sandhya directly on <a href="tel:+919082078172">9082078172</a>.</p></div></div>`;
+            setSubmitting(false);
+            return;
+        }
+        setSubmitting(false);
+        checkedPincodes.clear();
 
         resultDiv.innerHTML = '';
         showFieldError(inputEl, '');
@@ -905,11 +960,12 @@
         showStep('form');
     });
 
-    // ==================== STEP 2: PINCODE CHECK + SUBMIT ====================
+    // ==================== STEP 2: PINCODE CHECK ====================
     const inputEl = document.getElementById('pincodeInput');
     const checkBtn = document.getElementById('checkBtn');
     const resultDiv = document.getElementById('resultDisplay');
     const pincodesReady = loadPincodes();
+    const checkedPincodes = new Set();
     if (metaLead && metaLead.pin) inputEl.value = metaLead.pin;
 
     inputEl.addEventListener('input', (e) => {
@@ -917,11 +973,11 @@
         showFieldError(inputEl, '');
     });
 
-    function setChecking(on, label) {
+    function setChecking(on) {
         checkBtn.disabled = on;
         inputEl.readOnly = on;
         checkBtn.innerHTML = on
-            ? `<span class="spinner" aria-hidden="true"></span>${label}`
+            ? '<span class="spinner" aria-hidden="true"></span>Checking…'
             : `${icon('i-search', 'icon icon-sm')} Verify pincode`;
     }
 
@@ -935,12 +991,12 @@
         showFieldError(inputEl, '');
         resultDiv.innerHTML = '';
 
-        setChecking(true, 'Checking…');
+        setChecking(true);
         await pincodesReady;
         if (!pincodesLoaded) {
             resultDiv.innerHTML = `<div class="alert alert-warning">${icon('i-alert')}<div>
                 <h2>We couldn't load our locations.</h2>
-                <p>Please refresh the page and try again, or call our hiring manager.</p>${contactHTML}</div></div>`;
+                <p>Your details are saved. Please refresh the page and try again, or call our hiring manager.</p>${contactHTML}</div></div>`;
             setChecking(false);
             return;
         }
@@ -949,84 +1005,62 @@
             : prefix5Set.has(pincode.substring(0, 5)) ? 'nearby'
             : null;
 
+        // Record the pincode result for everyone (once per pincode tried).
+        if (!checkedPincodes.has(pincode)) {
+            checkedPincodes.add(pincode);
+            try {
+                await saveToSheet('Pincode checked', pincode, match === 'exact' ? 'Exact' : match === 'nearby' ? 'Nearby' : 'Not hiring');
+            } catch (err) {
+                console.error(err); // form row is already saved; carry on
+            }
+        }
+
         if (!match) {
             resultDiv.innerHTML = `<div class="alert alert-danger reveal">${icon('i-x-circle')}<div>
                 <h2>We're not hiring in ${pincode} right now.</h2>
-                <p>Try a nearby pincode.</p>${metaLead ? contactHTML : ''}</div></div>`;
+                <p>Your application is saved — we'll contact you if openings start near you. Entered the wrong pincode? Try again above.</p>${metaLead ? contactHTML : ''}</div></div>`;
             showStickyCallBar(!!metaLead);
             setChecking(false);
             return;
         }
 
         showStickyCallBar(true);
-        setChecking(true, 'Submitting…');
-        await submitApplication(pincode, match);
+        showSuccess(pincode, match);
     }
 
     checkBtn.addEventListener('click', checkPincode);
     inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); checkPincode(); } });
 
-    async function submitApplication(pincode, match) {
+    function showSuccess(pincode, match) {
         const a = applicant;
-        const formData = {
-            timestamp: new Date().toISOString(),
-            pincode: pincode,
-            name: a.name,
-            phone: a.phone,
-            experience_years: a.experience,
-            vacutainer_experience: a.vacutainerExp,
-            qualification: a.qualification,
-            equipment: a.equipment,
-            pincode_match: match === 'exact' ? 'Exact' : 'Nearby',
-            source: metaLead ? 'Meta' : 'Website',
-            meta_lead_id: metaLead ? metaLead.lead : '',
-            city: metaLead ? metaLead.city : '',
-            email: metaLead ? metaLead.email : ''
-        };
+        const waMessage =
+            `🩸 *New Phlebotomist Application*\n\n` +
+            `*Name:* ${a.name}\n` +
+            `*Phone:* ${a.phone}\n` +
+            `*Pincode:* ${pincode}${match === 'nearby' ? ' (nearby openings)' : ''}\n` +
+            `*Experience:* ${a.experience} years\n` +
+            `*Vacutainer:* ${a.vacutainerExp}\n` +
+            `*Qualification:* ${a.qualification}\n` +
+            `*Equipment:* ${a.equipment || 'None'}\n` +
+            `*Application ID:* ${applicationId}` +
+            (metaLead ? `\n*Source:* Meta` + (metaLead.lead ? `\n*Meta Lead ID:* ${metaLead.lead}` : '') : '');
+        const waLink = `https://wa.me/919082078172?text=${encodeURIComponent(waMessage)}`;
+        const areaLine = match === 'exact'
+            ? `Great news — we're hiring in ${pincode}.`
+            : `We have openings close to ${pincode} (${pincode.substring(0, 4)}XX).`;
 
-        const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxOt1OXB7aQsmaMYPYpapd2CKAxtQkkKRPWbfa_I_luIRBe38rLIGl9t9sI64hy0qaJ/exec";
-
-        try {
-            await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const waMessage =
-                `🩸 *New Phlebotomist Application*\n\n` +
-                `*Name:* ${a.name}\n` +
-                `*Phone:* ${a.phone}\n` +
-                `*Pincode:* ${pincode}${match === 'nearby' ? ' (nearby openings)' : ''}\n` +
-                `*Experience:* ${a.experience} years\n` +
-                `*Vacutainer:* ${a.vacutainerExp}\n` +
-                `*Qualification:* ${a.qualification}\n` +
-                `*Equipment:* ${a.equipment || 'None'}` +
-                (metaLead ? `\n*Source:* Meta` + (metaLead.lead ? `\n*Meta Lead ID:* ${metaLead.lead}` : '') : '');
-            const waLink = `https://wa.me/919082078172?text=${encodeURIComponent(waMessage)}`;
-            const areaLine = match === 'exact'
-                ? `Great news — we're hiring in ${pincode}.`
-                : `We have openings close to ${pincode} (${pincode.substring(0, 4)}XX).`;
-
-            pinStep.hidden = true;
-            formStatus.innerHTML = `<div class="success-panel">
-                <div class="big-ic">${icon('i-check-circle')}</div>
-                <h3>Application submitted</h3>
-                <p>${areaLine} Opening WhatsApp to send your details to our hiring manager…</p>
-                <div style="margin-top: 16px;">
-                    <a href="${waLink}" class="btn btn-primary" target="_blank" rel="noopener">Continue to WhatsApp</a>
-                </div>
-                ${contactHTML}
-            </div>`;
-            reveal(formStatus);
-            setTimeout(() => { window.location.href = waLink; }, 700);
-        } catch (err) {
-            console.error(err);
-            resultDiv.innerHTML = `<div class="alert alert-danger">${icon('i-alert')}<div>
-                <h2>Submission failed.</h2>
-                <p>Please try again or contact Sandhya directly on <a href="tel:+919082078172">9082078172</a>.</p></div></div>`;
-            setChecking(false);
-        }
+        pinStep.hidden = true;
+        formStatus.innerHTML = `<div class="success-panel">
+            <div class="big-ic">${icon('i-check-circle')}</div>
+            <h3>Application submitted</h3>
+            <p>${areaLine} Opening WhatsApp to send your details to our hiring manager…</p>
+            <div style="margin-top: 16px;">
+                <a href="${waLink}" class="btn btn-primary" target="_blank" rel="noopener">Continue to WhatsApp</a>
+            </div>
+            ${contactHTML}
+        </div>`;
+        reveal(formStatus);
+        setTimeout(() => { window.location.href = waLink; }, 700);
     }
 </script>
 </body>
