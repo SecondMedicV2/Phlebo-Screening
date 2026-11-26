@@ -730,8 +730,51 @@
             setStatus('Could not load locations. Please refresh or try again later.', 'fail');
         }
     }
-    loadPincodes();
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ==================== META LEAD LINK ====================
+    // Personal links for Meta leads, e.g.
+    // ?src=meta&pin=413112&name=...&phone=9075438009&city=...&email=...&bike=yes&lead=1145794104597658
+    function readMetaLead() {
+        const params = new URLSearchParams(window.location.search);
+        if (![...params.keys()].length) return null;
+        const text = (key) => (params.get(key) || '').trim().slice(0, 100);
+        const digits = (key) => (params.get(key) || '').replace(/\D/g, '');
+
+        const pinRaw = digits('pin');
+        let phone = digits('phone');
+        if (phone.length > 10 && (phone.startsWith('91') || phone.startsWith('0'))) phone = phone.slice(-10);
+        const lead = digits('lead').slice(0, 30);
+        const isMeta = text('src').toLowerCase() === 'meta' || lead !== '';
+        if (!isMeta) return null;
+
+        // Remove personal details from the address bar so they aren't re-shared.
+        try { history.replaceState(null, '', window.location.pathname + window.location.hash); } catch (e) {}
+
+        return {
+            pin: pinRaw.length === 6 ? pinRaw : '',
+            name: text('name'),
+            phone: /^[6-9]\d{9}$/.test(phone) ? phone : '',
+            city: text('city'),
+            email: text('email'),
+            bike: text('bike').toLowerCase() === 'yes',
+            lead: lead,
+        };
+    }
+    const metaLead = readMetaLead();
+
+    function applyMetaPrefill() {
+        if (!metaLead) return;
+        if (metaLead.name) document.getElementById('fullName').value = metaLead.name;
+        if (metaLead.phone) document.getElementById('phone').value = metaLead.phone;
+        if (metaLead.bike) {
+            const bikeBox = document.querySelector('.chip input[value="Bike/Scooter"]');
+            if (bikeBox) {
+                bikeBox.checked = true;
+                bikeBox.closest('.chip').classList.add('checked');
+            }
+        }
+    }
 
     // ==================== HELPERS ====================
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -793,6 +836,7 @@
         document.getElementById('formStatus').innerHTML = '';
         document.getElementById('submittedPincode').value = pincode;
         setSubmitting(false);
+        applyMetaPrefill();
     }
 
     function checkPincode() {
@@ -837,15 +881,22 @@
         } else {
             resultDiv.innerHTML = `<div class="alert alert-danger">${icon('i-x-circle')}<div>
                 <h2>We're not hiring in ${pincode} right now.</h2>
-                <p>Try a nearby pincode.</p></div></div>`;
+                <p>Try a nearby pincode.</p>${metaLead ? contactHTML : ''}</div></div>`;
             dynamicDiv.hidden = true;
-            showStickyCallBar(false);
+            showStickyCallBar(!!metaLead);
         }
         revealResult();
     }
 
     document.getElementById('checkBtn').addEventListener('click', checkPincode);
     inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); checkPincode(); } });
+
+    loadPincodes().then(() => {
+        if (pincodesLoaded && metaLead && metaLead.pin) {
+            inputEl.value = metaLead.pin;
+            checkPincode();
+        }
+    });
 
     // ==================== APPLICATION FORM ====================
     const form = document.getElementById('candidateForm');
@@ -921,7 +972,11 @@
             experience_years: experience,
             vacutainer_experience: vacutainerExp,
             qualification: qualification,
-            equipment: equipment
+            equipment: equipment,
+            source: metaLead ? 'Meta' : 'Website',
+            meta_lead_id: metaLead ? metaLead.lead : '',
+            city: metaLead ? metaLead.city : '',
+            email: metaLead ? metaLead.email : ''
         };
 
         const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxOt1OXB7aQsmaMYPYpapd2CKAxtQkkKRPWbfa_I_luIRBe38rLIGl9t9sI64hy0qaJ/exec";
@@ -941,7 +996,8 @@
                 `*Experience:* ${experience} years\n` +
                 `*Vacutainer:* ${vacutainerExp}\n` +
                 `*Qualification:* ${qualification}\n` +
-                `*Equipment:* ${equipment || 'None'}`;
+                `*Equipment:* ${equipment || 'None'}` +
+                (metaLead ? `\n*Source:* Meta` + (metaLead.lead ? `\n*Meta Lead ID:* ${metaLead.lead}` : '') : '');
             const waLink = `https://wa.me/919082078172?text=${encodeURIComponent(waMessage)}`;
 
             form.hidden = true;
