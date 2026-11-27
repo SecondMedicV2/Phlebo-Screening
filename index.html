@@ -24,10 +24,10 @@
     <meta name="twitter:image" content="https://thyrocarejobs.in/assets/og-image.png">
 
     <!-- Favicons -->
-    <link rel="icon" type="image/svg+xml" href="assets/thyrocare-icon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/assets/thyrocare-icon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -190,6 +190,7 @@
         #applyCard { scroll-margin-top: 72px; }
         .step-tag { font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--brand-accent-dark); margin-bottom: 4px; }
         .pin-result:not(:empty) { margin-top: 16px; }
+        #pinOk { margin: 12px 0 16px; }
         .link-btn {
             display: inline-flex; align-items: center; min-height: 44px; margin-top: 8px; padding: 0;
             background: none; border: none; cursor: pointer;
@@ -483,7 +484,7 @@
 <!-- 1. Header bar -->
 <header class="site-header">
     <div class="container">
-        <img src="assets/thyrocare-logo.svg" alt="Thyrocare" class="brand-logo" width="115" height="48">
+        <img src="/assets/thyrocare-logo.svg" alt="Thyrocare" class="brand-logo" width="115" height="48">
         <span class="header-tag">Careers</span>
     </div>
 </header>
@@ -495,10 +496,10 @@
             <div class="hero-content">
                 <span class="eyebrow"><span class="dot" aria-hidden="true"></span>Now hiring · Part-time</span>
                 <h1>Phlebotomist – <span class="accent">Home Sample Collection</span></h1>
-                <p class="hero-sub">Apply in 2 minutes, then check if we're hiring near your pincode.</p>
+                <p class="hero-sub" id="heroSub">Apply in 2 minutes, then check if we're hiring near your pincode.</p>
             </div>
             <div class="hero-media">
-                <img src="assets/phlebo.webp" alt="Thyrocare phlebotomist collecting a blood sample at home" class="hero-photo" width="360" height="450" decoding="async" loading="lazy">
+                <img src="/assets/phlebo.webp" alt="Thyrocare phlebotomist collecting a blood sample at home" class="hero-photo" width="360" height="450" decoding="async" loading="lazy">
             </div>
         </div>
     </div>
@@ -506,14 +507,18 @@
 
 <main>
     <div class="container">
-        <!-- Application card inside hero fold: step 1 form, step 2 pincode -->
+        <!-- Application card inside hero fold.
+             thyrocarejobs.in (Meta ads):              pincode first, then form.
+             thyrocarejobs.in/hiringphlebo/ (Google): form first, then pincode.
+             Same file; the deploy workflow copies it to hiringphlebo/index.html. -->
         <div class="check-wrap">
             <div class="card check-card" id="applyCard">
 
-                <!-- Step 1: application form -->
+                <!-- Application form -->
                 <div id="formStep">
-                    <p class="step-tag">Step 1 of 2 · Your details</p>
+                    <p class="step-tag" id="formTag">Step 1 of 2 · Your details</p>
                     <h2>Apply for this position</h2>
+                    <div id="pinOk" class="alert alert-success" role="status" hidden></div>
                     <p class="muted">Takes 2 minutes. Fields marked <span class="req" aria-hidden="true">*</span> are required.</p>
 
                     <form id="candidateForm" novalidate>
@@ -569,13 +574,14 @@
                             <p class="note"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"/></svg>We pay you order wise, not fixed salary.</p>
                         </div>
                     </form>
+                    <button type="button" id="changePinBtn" class="link-btn" hidden>← Change pincode</button>
                 </div>
 
-                <!-- Step 2: pincode verification -->
+                <!-- Pincode verification -->
                 <div id="pinStep" hidden>
-                    <p class="step-tag">Step 2 of 2 · Verify your area</p>
+                    <p class="step-tag" id="pinTag">Step 2 of 2 · Verify your area</p>
                     <h2>Enter your area pincode</h2>
-                    <p class="muted">Your details are saved. Now enter your area's 6-digit pincode so we can check openings near you, e.g. 400001.</p>
+                    <p class="muted" id="pinIntro">Your details are saved. Now enter your area's 6-digit pincode so we can check openings near you, e.g. 400001.</p>
                     <div class="check-row">
                         <div class="input-icon">
                             <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
@@ -602,6 +608,20 @@
                 <div id="formStatus" class="form-alert" aria-live="polite"></div>
             </div>
         </div>
+        <script>
+            // Runs before first paint so the right step shows without a flash.
+            const FORM_FIRST = /\/hiringphlebo(\/|\/index\.html)?$/.test(window.location.pathname);
+            if (!FORM_FIRST) {
+                document.getElementById('formStep').hidden = true;
+                document.getElementById('pinStep').hidden = false;
+                document.getElementById('heroSub').textContent = "Check if we're hiring near your pincode, then apply in 2 minutes.";
+                document.getElementById('formTag').textContent = 'Step 2 of 2 · Your details';
+                document.getElementById('pinTag').textContent = 'Step 1 of 2 · Check your area';
+                document.getElementById('pinIntro').textContent = "Enter your area's 6-digit pincode to see if we're hiring near you, e.g. 400001.";
+                document.getElementById('editBtn').hidden = true;
+                document.getElementById('changePinBtn').hidden = false;
+            }
+        </script>
 
         <!-- 3. Highlights strip -->
         <section aria-labelledby="highlightsTitle">
@@ -628,7 +648,7 @@
 
         <!-- Mobile photo card under highlights (<900px) -->
         <figure class="mobile-photo-card">
-            <img src="assets/phlebo.webp" alt="Thyrocare phlebotomist collecting a blood sample at home" class="mobile-photo" width="640" height="400" decoding="async" loading="lazy">
+            <img src="/assets/phlebo.webp" alt="Thyrocare phlebotomist collecting a blood sample at home" class="mobile-photo" width="640" height="400" decoding="async" loading="lazy">
             <figcaption class="mobile-photo-caption">Home sample collection · 6–11 AM</figcaption>
         </figure>
 
@@ -680,8 +700,8 @@
             <h2 class="section-title" id="stepsTitle">How to apply</h2>
             <p class="section-sub">Three quick steps from your phone.</p>
             <div class="steps">
-                <div class="card step"><span class="step-num">1</span><div><h3>Fill the screening form</h3><p>Your experience, qualification and equipment.</p></div></div>
-                <div class="card step"><span class="step-num">2</span><div><h3>Verify your pincode</h3><p>We check if we're hiring in or near your area.</p></div></div>
+                <div class="card step" id="howForm"><span class="step-num">1</span><div><h3>Fill the screening form</h3><p>Your experience, qualification and equipment.</p></div></div>
+                <div class="card step" id="howPin"><span class="step-num">2</span><div><h3>Verify your pincode</h3><p>We check if we're hiring in or near your area.</p></div></div>
                 <div class="card step"><span class="step-num">3</span><div><h3>Confirm on WhatsApp</h3><p>Your application is sent to our hiring manager.</p></div></div>
             </div>
         </section>
@@ -691,7 +711,7 @@
 <!-- 5. Footer -->
 <footer class="site-footer">
     <div class="container">
-        <img src="assets/thyrocare-logo.svg" alt="Thyrocare" class="footer-logo" width="86" height="36">
+        <img src="/assets/thyrocare-logo.svg" alt="Thyrocare" class="footer-logo" width="86" height="36">
         <p>© <span id="year">2026</span> Thyrocare</p>
     </div>
 </footer>
@@ -722,7 +742,7 @@
     async function loadPincodes() {
         setStatus('Loading active locations…');
         try {
-            const response = await fetch('pincodes.json');
+            const response = await fetch('/pincodes.json');
             if (!response.ok) throw new Error('Failed to fetch pincodes');
             const pincodes = await response.json();
             exactSet = new Set(pincodes);
@@ -791,6 +811,11 @@
         return result;
     }
     let adLead = readAdLead();
+    // /hiringphlebo/ is only linked from Google ads, so untagged visits there count as Google.
+    if (!adLead && FORM_FIRST) {
+        adLead = { source: 'Google', pin: '', name: '', phone: '', city: '', email: '',
+                   bike: false, lead: '', clickId: '', campaign: '' };
+    }
 
     function tickBike() {
         const bikeBox = document.querySelector('.chip input[value="Bike/Scooter"]');
@@ -879,7 +904,15 @@
     }
 
     // ==================== STEPS ====================
-    // Step 1 = application form, step 2 = pincode check, then submit.
+    // FORM_FIRST (/hiringphlebo/, Google): form → pincode check → WhatsApp.
+    // Otherwise (/, Meta):                  pincode check → form → WhatsApp.
+    if (!FORM_FIRST) {
+        const howForm = document.getElementById('howForm');
+        const howPin = document.getElementById('howPin');
+        howForm.parentNode.insertBefore(howPin, howForm);
+        howPin.querySelector('.step-num').textContent = '1';
+        howForm.querySelector('.step-num').textContent = '2';
+    }
     const applyCard = document.getElementById('applyCard');
     const formStep = document.getElementById('formStep');
     const pinStep = document.getElementById('pinStep');
@@ -946,9 +979,10 @@
     }
 
     // ==================== GOOGLE SHEET ====================
-    // Every applicant is saved twice under the same application_id:
-    //   stage "Form submitted"  – right after step 1, pincode still blank
-    //   stage "Pincode checked" – after step 2, with pincode + match result
+    // Form-first page: every applicant is saved twice under the same application_id:
+    //   stage "Form submitted"  – right after the form, pincode still blank
+    //   stage "Pincode checked" – after the pincode step, with pincode + match result
+    // Pincode-first page: one "Form submitted" row with the verified pincode filled in.
     const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxOt1OXB7aQsmaMYPYpapd2CKAxtQkkKRPWbfa_I_luIRBe38rLIGl9t9sI64hy0qaJ/exec";
     const applicationId = 'APP-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
 
@@ -1003,9 +1037,13 @@
             equipment: Array.from(form.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value).join(', '),
         };
 
+        if (!FORM_FIRST && !verifiedPin) { showStep('pin'); return; }
+
         setSubmitting(true);
         try {
-            await saveToSheet('Form submitted', '', '');
+            await saveToSheet('Form submitted',
+                FORM_FIRST ? '' : verifiedPin.pincode,
+                FORM_FIRST ? '' : matchLabel(verifiedPin.match));
         } catch (err) {
             console.error(err);
             formStatus.innerHTML = `<div class="alert alert-danger">${icon('i-alert')}<div>
@@ -1015,8 +1053,14 @@
             return;
         }
         setSubmitting(false);
-        checkedPincodes.clear();
 
+        if (!FORM_FIRST) {
+            showStickyCallBar(true);
+            showSuccess(verifiedPin.pincode, verifiedPin.match);
+            return;
+        }
+
+        checkedPincodes.clear();
         resultDiv.innerHTML = '';
         showFieldError(inputEl, '');
         showStep('pin');
@@ -1029,12 +1073,25 @@
         showStep('form');
     });
 
-    // ==================== STEP 2: PINCODE CHECK ====================
+    document.getElementById('changePinBtn').addEventListener('click', () => {
+        verifiedPin = null;
+        resultDiv.innerHTML = '';
+        showStickyCallBar(false);
+        showStep('pin');
+        inputEl.focus({ preventScroll: true });
+    });
+
+    // ==================== PINCODE CHECK ====================
     const inputEl = document.getElementById('pincodeInput');
     const checkBtn = document.getElementById('checkBtn');
     const resultDiv = document.getElementById('resultDisplay');
     const pincodesReady = loadPincodes();
     const checkedPincodes = new Set();
+    let verifiedPin = null; // pincode-first page: { pincode, match } once a pincode has openings
+    const matchLabel = (match) => match === 'exact' ? 'Exact' : match === 'nearby' ? 'Nearby' : 'Not hiring';
+    const areaLineFor = (pincode, match) => match === 'exact'
+        ? `Great news — we're hiring in ${pincode}.`
+        : `We have openings close to ${pincode} (${pincode.substring(0, 4)}XX).`;
     if (adLead && adLead.pin) inputEl.value = adLead.pin;
 
     inputEl.addEventListener('input', (e) => {
@@ -1052,7 +1109,7 @@
 
     async function checkPincode() {
         if (checkBtn.disabled) return;
-        if (!applicant) { showStep('form'); return; }
+        if (FORM_FIRST && !applicant) { showStep('form'); return; }
 
         const pincode = inputEl.value.trim();
         if (pincode === '') { showFieldError(inputEl, 'Enter a pincode'); return; }
@@ -1074,22 +1131,36 @@
             : prefix5Set.has(pincode.substring(0, 5)) ? 'nearby'
             : null;
 
-        // Record the pincode result for everyone (once per pincode tried).
-        if (!checkedPincodes.has(pincode)) {
+        // Form-first: record the pincode result against the saved form (once per pincode tried).
+        if (FORM_FIRST && !checkedPincodes.has(pincode)) {
             checkedPincodes.add(pincode);
             try {
-                await saveToSheet('Pincode checked', pincode, match === 'exact' ? 'Exact' : match === 'nearby' ? 'Nearby' : 'Not hiring');
+                await saveToSheet('Pincode checked', pincode, matchLabel(match));
             } catch (err) {
                 console.error(err); // form row is already saved; carry on
             }
         }
 
         if (!match) {
+            const saved = FORM_FIRST ? "Your application is saved — we'll contact you if openings start near you. " : '';
             resultDiv.innerHTML = `<div class="alert alert-danger reveal">${icon('i-x-circle')}<div>
                 <h2>We're not hiring in ${pincode} right now.</h2>
-                <p>Your application is saved — we'll contact you if openings start near you. Entered the wrong pincode? Try again above.</p>${adLead ? contactHTML : ''}</div></div>`;
+                <p>${saved}Entered the wrong pincode? Try again above.</p>${adLead ? contactHTML : ''}</div></div>`;
             showStickyCallBar(!!adLead);
             setChecking(false);
+            return;
+        }
+
+        if (!FORM_FIRST) {
+            // Pincode has openings: move on to the application form.
+            verifiedPin = { pincode, match };
+            setChecking(false);
+            resultDiv.innerHTML = '';
+            const pinOk = document.getElementById('pinOk');
+            pinOk.innerHTML = `${icon('i-check-circle')}<div><h2>${areaLineFor(pincode, match)}</h2><p>Fill in your details below to apply.</p></div>`;
+            pinOk.hidden = false;
+            showStep('form');
+            document.getElementById('fullName').focus({ preventScroll: true });
             return;
         }
 
@@ -1114,22 +1185,19 @@
             `*Application ID:* ${applicationId}` +
             (adLead ? `\n*Source:* ${adLead.source}` + (adLead.lead ? `\n*${adLead.source} Lead ID:* ${adLead.lead}` : '') : '');
         const waLink = `https://wa.me/919082078172?text=${encodeURIComponent(waMessage)}`;
-        const areaLine = match === 'exact'
-            ? `Great news — we're hiring in ${pincode}.`
-            : `We have openings close to ${pincode} (${pincode.substring(0, 4)}XX).`;
-
         pinStep.hidden = true;
+        formStep.hidden = true;
+        // No automatic redirect: the candidate sees the result first and taps to open WhatsApp.
         formStatus.innerHTML = `<div class="success-panel">
             <div class="big-ic">${icon('i-check-circle')}</div>
             <h3>Application submitted</h3>
-            <p>${areaLine} Opening WhatsApp to send your details to our hiring manager…</p>
+            <p>${areaLineFor(pincode, match)} Tap below to send your details to our hiring manager on WhatsApp.</p>
             <div style="margin-top: 16px;">
                 <a href="${waLink}" class="btn btn-primary" target="_blank" rel="noopener">Continue to WhatsApp</a>
             </div>
             ${contactHTML}
         </div>`;
         reveal(formStatus);
-        setTimeout(() => { window.location.href = waLink; }, 700);
     }
 </script>
 </body>
