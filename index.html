@@ -509,8 +509,10 @@
     <div class="container">
         <!-- Application card inside hero fold.
              thyrocarejobs.in (Meta ads):              pincode first, then form.
-             thyrocarejobs.in/hiringphlebo/ (Google): form first, then pincode.
-             Same file; the deploy workflow copies it to hiringphlebo/index.html. -->
+             hiringphlebo.thyrocarejobs.in (Google):   form first, then pincode.
+             Same file: the SecondMedicV2/hiringphlebo repo deploys this repo to the
+             subdomain. thyrocarejobs.in/hiringphlebo/ (a copy made by pages.yml) is
+             also form-first. -->
         <div class="check-wrap">
             <div class="card check-card" id="applyCard">
 
@@ -610,7 +612,8 @@
         </div>
         <script>
             // Runs before first paint so the right step shows without a flash.
-            const FORM_FIRST = /\/hiringphlebo(\/|\/index\.html)?$/.test(window.location.pathname);
+            const FORM_FIRST = /\/hiringphlebo(\/|\/index\.html)?$/.test(window.location.pathname)
+                || window.location.hostname.startsWith('hiringphlebo.');
             if (!FORM_FIRST) {
                 document.getElementById('formStep').hidden = true;
                 document.getElementById('pinStep').hidden = false;
@@ -811,7 +814,8 @@
         return result;
     }
     let adLead = readAdLead();
-    // /hiringphlebo/ is only linked from Google ads, so untagged visits there count as Google.
+    // The Google pages (hiringphlebo.thyrocarejobs.in and /hiringphlebo/) are only linked
+    // from Google ads, so untagged visits there count as Google.
     if (!adLead && FORM_FIRST) {
         adLead = { source: 'Google', pin: '', name: '', phone: '', city: '', email: '',
                    bike: false, lead: '', clickId: '', campaign: '' };
@@ -904,7 +908,7 @@
     }
 
     // ==================== STEPS ====================
-    // FORM_FIRST (/hiringphlebo/, Google): form → pincode check → WhatsApp.
+    // FORM_FIRST (hiringphlebo.thyrocarejobs.in or /hiringphlebo/, Google): form → pincode check → WhatsApp.
     // Otherwise (/, Meta):                  pincode check → form → WhatsApp.
     if (!FORM_FIRST) {
         const howForm = document.getElementById('howForm');
