@@ -19,6 +19,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+      # thyrocarejobs.in/hiringphlebo/ (Google ads, form-first) is the same page as the
+      # root (Meta ads, pincode-first); index.html picks the flow from the URL path.
+      - name: Build /hiringphlebo/ page
+        run: |
+          mkdir -p hiringphlebo
+          sed 's#https://thyrocarejobs.in/"#https://thyrocarejobs.in/hiringphlebo/"#g' index.html > hiringphlebo/index.html
       - name: Setup Pages
         uses: actions/configure-pages@v6
       - name: Upload artifact
