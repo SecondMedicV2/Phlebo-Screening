@@ -425,7 +425,6 @@
         .chip:focus-within { box-shadow: 0 0 0 4px rgba(46, 54, 73, .14); border-color: var(--brand-primary); }
 
         .form-foot { margin-top: 22px; }
-        #leadFound { display: flex; gap: 6px; align-items: center; margin-top: 6px; font-size: .8125rem; color: #15803d; }
         .form-foot .note { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 12px; font-size: .8125rem; color: var(--text-muted); text-align: center; }
 
         .form-alert { margin-top: 14px; }
@@ -528,7 +527,6 @@
                                 <label for="phone">Mobile number <span class="hint">(10 digits)</span> <span class="req" aria-hidden="true">*</span></label>
                                 <input type="tel" id="phone" class="input" maxlength="10" inputmode="numeric" autocomplete="tel" required aria-describedby="err-phone">
                                 <div class="field-error" id="err-phone"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-alert"/></svg><span></span></div>
-                                <p class="note" id="leadFound" role="status" hidden><svg class="icon icon-sm" aria-hidden="true"><use href="#i-check"/></svg>We found your Facebook application and filled in your details.</p>
                             </div>
                             <div class="field">
                                 <label for="experience">Years of phlebotomy experience <span class="req" aria-hidden="true">*</span></label>
@@ -847,9 +845,6 @@
         if (!adLead.city) adLead.city = String(data.city || '').slice(0, 100);
         if (!adLead.email) adLead.email = String(data.email || '').slice(0, 100);
         if (!adLead.pin && /^\d{6}$/.test(pin)) adLead.pin = pin;
-
-        const note = document.getElementById('leadFound');
-        if (note) note.hidden = false;
     }
 
     // ==================== HELPERS ====================
